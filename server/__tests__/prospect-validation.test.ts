@@ -45,6 +45,100 @@ describe("prospect creation validation", () => {
       `Interest level must be one of: ${INTEREST_LEVELS.join(", ")}`
     );
   });
+
+  test("accepts a valid target salary", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "120000",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts a target salary with decimals", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "95000.50",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts an empty target salary (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts a null target salary (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: null,
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts undefined target salary (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("rejects target salary with letters", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "abc",
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Target salary must be a valid number");
+  });
+
+  test("rejects target salary with symbols", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "$120,000",
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Target salary must be a valid number");
+  });
+
+  test("rejects target salary with mixed letters and numbers", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "120k",
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Target salary must be a valid number");
+  });
+
+  test("rejects target salary with too many decimal places", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "120000.123",
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Target salary must be a valid number");
+  });
+
+  test("rejects negative target salary", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      targetSalary: "-50000",
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain("Target salary must be a valid number");
+  });
 });
 
 describe("interest level filtering logic", () => {
