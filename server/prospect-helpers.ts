@@ -39,6 +39,13 @@ export function validateProspect(data: Record<string, unknown>): { valid: boolea
     }
   }
 
+  if (data.targetSalary !== undefined && data.targetSalary !== null && data.targetSalary !== "") {
+    const salaryStr = String(data.targetSalary);
+    if (!/^\d+(\.\d{1,2})?$/.test(salaryStr)) {
+      errors.push("Target salary must be a valid number");
+    }
+  }
+
   return { valid: errors.length === 0, errors };
 }
 

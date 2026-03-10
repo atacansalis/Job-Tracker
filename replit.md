@@ -30,10 +30,11 @@ client/src/
 
 ## Database
 
-Single `prospects` table: id, company_name, role_title, job_url, status, interest_level, notes, created_at.
+Single `prospects` table: id, company_name, role_title, job_url, status, interest_level, target_salary (numeric 12,2), notes, created_at.
 
 - **Statuses**: Bookmarked, Applied, Phone Screen, Interviewing, Offer, Rejected, Withdrawn
 - **Interest levels**: High, Medium, Low
+- **Target salary**: Optional decimal field; empty strings normalized to null before DB write; validated as digits only with up to 2 decimal places
 
 ## API
 
