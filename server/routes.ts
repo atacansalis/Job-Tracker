@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProspectSchema, STATUSES, INTEREST_LEVELS } from "@shared/schema";
+import { insertProspectSchema, STATUSES, INTEREST_LEVELS, WORK_MODES } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -46,6 +46,18 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Target salary must be a valid number" });
       }
       updates.targetSalary = salary;
+    }
+
+    if (body.jobLocation !== undefined) {
+      updates.jobLocation = body.jobLocation === "" ? null : (body.jobLocation?.trim() || null);
+    }
+
+    if (body.workMode !== undefined) {
+      const mode = body.workMode === "" ? null : body.workMode;
+      if (mode !== null && !WORK_MODES.includes(mode)) {
+        return res.status(400).json({ message: `Work mode must be one of: ${WORK_MODES.join(", ")}` });
+      }
+      updates.workMode = mode;
     }
 
     if (body.status !== undefined) {

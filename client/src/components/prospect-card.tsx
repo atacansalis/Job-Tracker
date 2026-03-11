@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Prospect } from "@shared/schema";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Trash2, Pencil, Flame, ThumbsUp, Minus, DollarSign } from "lucide-react";
+import { ExternalLink, Trash2, Pencil, Flame, ThumbsUp, Minus, DollarSign, MapPin, Building2, Home, Monitor } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -115,6 +115,31 @@ export function ProspectCard({ prospect }: { prospect: Prospect }) {
             </span>
           )}
         </div>
+
+        {(prospect.jobLocation || prospect.workMode) && (
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {prospect.jobLocation && (
+              <span
+                className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 dark:text-blue-400"
+                data-testid={`text-location-${prospect.id}`}
+              >
+                <MapPin className="w-3 h-3" />
+                {prospect.jobLocation}
+              </span>
+            )}
+            {prospect.workMode && (
+              <span
+                className="inline-flex items-center gap-1 text-xs font-medium text-violet-600 dark:text-violet-400"
+                data-testid={`text-work-mode-${prospect.id}`}
+              >
+                {prospect.workMode === "Remote" ? <Monitor className="w-3 h-3" /> :
+                 prospect.workMode === "Hybrid" ? <Building2 className="w-3 h-3" /> :
+                 <Home className="w-3 h-3" />}
+                {prospect.workMode}
+              </span>
+            )}
+          </div>
+        )}
 
         {prospect.jobUrl && (
           <a

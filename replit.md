@@ -30,11 +30,14 @@ client/src/
 
 ## Database
 
-Single `prospects` table: id, company_name, role_title, job_url, status, interest_level, target_salary (numeric 12,2), notes, created_at.
+Single `prospects` table: id, company_name, role_title, job_url, status, interest_level, target_salary (numeric 12,2), job_location, work_mode, notes, created_at.
 
 - **Statuses**: Bookmarked, Applied, Phone Screen, Interviewing, Offer, Rejected, Withdrawn
 - **Interest levels**: High, Medium, Low
+- **Work modes**: Remote, Hybrid, On-site
 - **Target salary**: Optional decimal field; empty strings normalized to null before DB write; validated as digits only with up to 2 decimal places
+- **Job location**: Optional text field (city/state); empty strings normalized to null, trimmed before save
+- **Work mode**: Optional enum-like text field; validated against allowed values (Remote, Hybrid, On-site)
 
 ## API
 

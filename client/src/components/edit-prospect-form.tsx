@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertProspectSchema, STATUSES, INTEREST_LEVELS } from "@shared/schema";
+import { insertProspectSchema, STATUSES, INTEREST_LEVELS, WORK_MODES } from "@shared/schema";
 import type { InsertProspect, Prospect } from "@shared/schema";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -42,6 +42,8 @@ export function EditProspectForm({ prospect, onSuccess }: EditProspectFormProps)
       status: prospect.status as InsertProspect["status"],
       interestLevel: prospect.interestLevel as InsertProspect["interestLevel"],
       targetSalary: prospect.targetSalary ?? "",
+      jobLocation: prospect.jobLocation ?? "",
+      workMode: prospect.workMode ?? "",
       notes: prospect.notes ?? "",
     },
   });
@@ -184,6 +186,53 @@ export function EditProspectForm({ prospect, onSuccess }: EditProspectFormProps)
             </FormItem>
           )}
         />
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="jobLocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>City/State (optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g. Austin, TX"
+                    {...field}
+                    value={field.value ?? ""}
+                    data-testid="input-edit-job-location"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="workMode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Work Mode (optional)</FormLabel>
+                <Select onValueChange={(v) => field.onChange(v === "none" ? "" : v)} value={field.value || "none"}>
+                  <FormControl>
+                    <SelectTrigger data-testid="select-edit-work-mode">
+                      <SelectValue placeholder="Select mode" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="none" data-testid="option-edit-work-mode-none">None</SelectItem>
+                    {WORK_MODES.map((mode) => (
+                      <SelectItem key={mode} value={mode} data-testid={`option-edit-work-mode-${mode}`}>
+                        {mode}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
