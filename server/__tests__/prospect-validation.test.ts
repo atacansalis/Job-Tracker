@@ -1,5 +1,5 @@
 import { validateProspect } from "../prospect-helpers";
-import { INTEREST_LEVELS } from "@shared/schema";
+import { INTEREST_LEVELS, WORK_MODES } from "@shared/schema";
 
 describe("prospect creation validation", () => {
   test("rejects a blank company name", () => {
@@ -138,6 +138,94 @@ describe("prospect creation validation", () => {
     });
     expect(result.valid).toBe(false);
     expect(result.errors).toContain("Target salary must be a valid number");
+  });
+});
+
+describe("job location validation", () => {
+  test("accepts a valid job location", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      jobLocation: "Austin, TX",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts an empty job location (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      jobLocation: "",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts a null job location (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      jobLocation: null,
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts undefined job location (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+    });
+    expect(result.valid).toBe(true);
+  });
+});
+
+describe("work mode validation", () => {
+  test("accepts all valid work modes", () => {
+    for (const mode of WORK_MODES) {
+      const result = validateProspect({
+        companyName: "TestCo",
+        roleTitle: "Engineer",
+        workMode: mode,
+      });
+      expect(result.valid).toBe(true);
+    }
+  });
+
+  test("rejects an invalid work mode", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      workMode: "Flexible",
+    });
+    expect(result.valid).toBe(false);
+    expect(result.errors).toContain(
+      `Work mode must be one of: ${WORK_MODES.join(", ")}`
+    );
+  });
+
+  test("accepts an empty work mode (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      workMode: "",
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts a null work mode (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+      workMode: null,
+    });
+    expect(result.valid).toBe(true);
+  });
+
+  test("accepts undefined work mode (optional)", () => {
+    const result = validateProspect({
+      companyName: "TestCo",
+      roleTitle: "Engineer",
+    });
+    expect(result.valid).toBe(true);
   });
 });
 

@@ -1,4 +1,4 @@
-import { STATUSES, INTEREST_LEVELS } from "@shared/schema";
+import { STATUSES, INTEREST_LEVELS, WORK_MODES } from "@shared/schema";
 
 export function getNextStatus(currentStatus: string): string {
   const terminalStatuses = ["Offer", "Rejected", "Withdrawn"];
@@ -43,6 +43,12 @@ export function validateProspect(data: Record<string, unknown>): { valid: boolea
     const salaryStr = String(data.targetSalary);
     if (!/^\d+(\.\d{1,2})?$/.test(salaryStr)) {
       errors.push("Target salary must be a valid number");
+    }
+  }
+
+  if (data.workMode !== undefined && data.workMode !== null && data.workMode !== "") {
+    if (!WORK_MODES.includes(data.workMode as (typeof WORK_MODES)[number])) {
+      errors.push(`Work mode must be one of: ${WORK_MODES.join(", ")}`);
     }
   }
 
